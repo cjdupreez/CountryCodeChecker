@@ -14,10 +14,8 @@ cat /tmp/ip2url1.txt |awk {'print $1'} | sort | uniq> /tmp/countries2.txt
 python urlChecker.py -i /tmp/countries2.txt -o /tmp/
 rm /tmp/countries2.txt
 #Check to see if sites were malicious, if not, terminate
-test=$(python parseCheckerFile.py -i /tmp/VirusTotalResults.txt)
+test=$(python parseCheckerFile.py -i /tmp/VirusTotalResults.txt -o /tmp/Malicious4.txt)
 if [ "$test" != "No malicious hits found" ]; then
-	#Parse the results to find which sites were malicious
-	python parseCheckerFile.py -i /tmp/VirusTotalResults.txt -o /tmp/Malicious4.txt
 	#Format a usable list of URLs.
 	cat /tmp/Malicious4.txt | grep -i -e "\.vn\>" -e "\.nl\>" -e "\.ch\>" -e "\.lk\>" -e "\.hk\>" -e "\.co.za\>" -e "\.de\>" -e "\.pw\>" -e "\.su\>" -e "\.ua\>"  -e "\.me\>" -e "\.biz\>" -e "\.ru\>" -e "\.pl\>" -e "\.in\>" -e "\.hu\>" -e "\.cn\>" -e "\.info\>" -e "\.cc\>"| sort| uniq| awk {'print $2'} > /tmp/confirmed5.txt
 	#Distinguish which IPs had visited the confirmed malicious websites
@@ -54,7 +52,7 @@ if [ "$test" != "No malicious hits found" ]; then
         	cat /tmp/VirusTotalResults.txt| grep -A3 `echo $line | awk {'print $1'}`| tail -n 1
         	let diff=$((-($time1-$time2)))
         	if [ $diff -gt 0 ]; then
-                	echo "This connection persisted for $(($diff / 3600)) hours, $(($diff / 60)) minutes, and $(($diff % 60)) seconds."
+                	echo "This connection persisted for $(($diff / 3600)) hours, $((($diff / 60)%60)) minutes, and $(($diff % 60)) seconds."
         	else
                 	echo "This connection happened only once."
         	fi
@@ -65,5 +63,7 @@ if [ "$test" != "No malicious hits found" ]; then
 	rm /tmp/Ips9.txt
 else
 	echo "No malicious connections were made today."
-	rm ip2url1.txt
+	rm /tmp/ip2url1.txt
+	rm /tmp/countries2.txt
+	rm /tmp/VirusTotalResults.txt
 fi

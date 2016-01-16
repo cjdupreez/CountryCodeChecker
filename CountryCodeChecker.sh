@@ -1,6 +1,6 @@
 #!/bin/bash
-echo "Subject: Malicious websites scanned results - Love The Onion."
-echo "From: onion@ung.edu"
+echo "Subject: Malicious websites scanned results"
+echo "From: onion@mysite.com"
 #Navigate into curent day's directory in bro
 cd /nsm/bro/logs/
 str=$(date '+%F')
